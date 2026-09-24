@@ -41,7 +41,9 @@ android {
 
     signingConfigs {
         create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String？
+            // 方案A：安全转换 ?: 给默认值
+val appName: String = project.findProperty("app_name") as String? ?: "默认名字"
+
             keyPassword = keystoreProperties["keyPassword"] as String
             storeFile = keystoreProperties["storeFile"]?.let { file(it) }
             storePassword = keystoreProperties["storePassword"] as String
