@@ -1,0 +1,36 @@
+name: Build SimpleLive TV Manual
+on:
+  workflow_dispatch:
+
+jobs:
+  build-tv:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.3'
+
+      - name: Flutter build tv apk
+        working-directory: simple_live_tv_app
+        run: |
+          flutter pub get
+          flutter clean
+          flutter build apk --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SimpleLive-TV-APK
+          path: simple_live_tv_app/build/app/outputs/flutter-apk/app-release.apk
